@@ -11,15 +11,32 @@ use GuzzleHttp\Client;
 
 class AIResponseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $aiResponses = ai_response::where('user_id', auth()->id())->get();
+        $search = $request->input('search');
+        $aiResponses = ai_response::query()
+            ->when($search, function ($query, $search) {
+                $query->where('title', 'LIKE', "%{$search}%");
+            })
+            ->where('user_id', auth()->id()) 
+            ->orderBy('id', 'desc') 
+            ->paginate(6); 
     
-      
         return response()->json([
             'data' => ai_resource::collection($aiResponses),
+            'meta' => [
+                'current_page' => $aiResponses->currentPage(),
+                'total' => $aiResponses->total(),
+                'last_page' => $aiResponses->lastPage(),
+                'from' => $aiResponses->firstItem(),
+                'to' => $aiResponses->lastItem(),
+            ]
         ]);
     }
+    
+
+
+
     public function store(Request $request)
     {
         // Validate the file upload
@@ -80,5 +97,13 @@ class AIResponseController extends Controller
             // Handle errors
             return response()->json(['error' => 'Failed to generate quiz: ' . $e->getMessage()], 500);
         }
+    }
+
+
+    public function destroy(ai_response $response)
+    {
+
+            $response->delete();
+            return response()->json(['message' => 'Response deleted successfully']);
     }
 }

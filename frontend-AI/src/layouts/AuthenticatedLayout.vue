@@ -10,7 +10,6 @@ import ResponsiveNavButton from '@/components/ResponsiveNavButton.vue'
 import { useAuthStore } from '@/stores/auth'
 import Login from '@/components/Auth/Login.vue';
 import Profile from '@/components/Auth/Profile.vue';
-import Modal from '@/components/Modal.vue';
 
 const route = useRoute()
 

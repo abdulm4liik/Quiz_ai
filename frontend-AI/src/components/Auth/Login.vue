@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import Checkbox from '@/components/Checkbox.vue'
 
-// Form state for login and register
 const form = ref({
   email: '',
   password: '',
@@ -17,11 +16,11 @@ const formRegister = ref({
   password_confirmation: '',
 })
 
-// Shared state
+
 const processing = ref(false)
 const errors = ref({})
 const status = ref(null)
-const showLogin = ref(true)  // This will toggle between login and register form
+const showLogin = ref(true)  
 const route = useRoute()
 
 watchEffect(() => {
@@ -34,7 +33,7 @@ watchEffect(() => {
 
 const { login, register } = useAuthStore()
 
-// Handle login
+
 const handleLogin = async () => {
   try {
     await login(processing, errors, form.value)
@@ -43,7 +42,6 @@ const handleLogin = async () => {
   }
 }
 
-// Handle register
 const handleRegister = async () => {
   try {
     await register(processing, errors, formRegister.value)
@@ -54,7 +52,6 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <!-- Login Form -->
   <div v-if="showLogin" class="relative bg-navy-soft rounded-lg shadow">
     <div class="p-5">
       <div class="text-center">
@@ -65,7 +62,6 @@ const handleRegister = async () => {
       </div>
 
       <div class="w-full mt-8">
-        <!-- Email Input -->
         <input
           v-model="form.email"
           name="email"
@@ -76,7 +72,6 @@ const handleRegister = async () => {
           :class="{'border-red-400': errors.email}"
         />
 
-        <!-- Password Input -->
         <input
           v-model="form.password"
           name="password"
@@ -112,7 +107,6 @@ const handleRegister = async () => {
     </div>
   </div>
 
-  <!-- Register Form -->
   <div v-else class="relative bg-navy-soft rounded-lg shadow">
     <div class="p-5">
       <div class="text-center">
@@ -123,7 +117,6 @@ const handleRegister = async () => {
       </div>
 
       <div class="w-full mt-8">
-        <!-- Name Input -->
         <input
           v-model="formRegister.name"
           name="name"
@@ -133,7 +126,6 @@ const handleRegister = async () => {
           :class="{'border-red-400': errors.name}"
         />
 
-        <!-- Email Input -->
         <input
           v-model="formRegister.email"
           name="email"
@@ -144,7 +136,6 @@ const handleRegister = async () => {
           :class="{'border-red-400': errors.email}"
         />
 
-        <!-- Password Input -->
         <input
           v-model="formRegister.password"
           name="password"
@@ -155,7 +146,6 @@ const handleRegister = async () => {
           :class="{'border-red-400': errors.password}"
         />
 
-        <!-- Password Confirmation Input -->
         <input
           v-model="formRegister.password_confirmation"
           name="password_confirmation"
@@ -168,7 +158,7 @@ const handleRegister = async () => {
 
    
 
-        <!-- Register Button -->
+      
         <div
           @click="handleRegister"
           class="inline-flex h-10 mt-6 w-full items-center cursor-pointer justify-center gap-2 rounded border-4 border-double border-beige-dark bg-beige-light p-2 text-navy-soft "

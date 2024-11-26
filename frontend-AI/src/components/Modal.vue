@@ -41,12 +41,7 @@ const closeOnEscape = (e) => {
   }
 }
 
-onMounted(() => document.addEventListener('keydown', closeOnEscape))
 
-onUnmounted(() => {
-  document.removeEventListener('keydown', closeOnEscape)
-  document.body.style.overflow = null
-})
 
 const maxWidthClass = computed(() => {
   return {

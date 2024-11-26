@@ -2,56 +2,43 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
-    public function updateProfile(Request $request)
+    public function updatePassword(Request $request)
     {
-        // Validate the incoming request
-        $validator = Validator::make($request->all(), [
-            'current_password' => ['required', 'string'],
-            'name' => ['nullable', 'string', 'max:255'],
-            'password' => ['nullable', 'confirmed', Password::defaults()],
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password'], // Built-in rule for current password
+            'password' => ['required', Password::defaults(), 'confirmed'], // Password confirmation
+        ]);
+    
+        $request->user()->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+    
+        return response()->json([
+            'message' => 'Password updated successfully.',
+        ]);
+    }
+
+
+    public function updateName(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
         ]);
 
-        // If validation fails, return errors
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422);
-        }
+        $request->user()->fill($validated)->save();
 
-        $user = $request->user(); // Get the authenticated user
-
-        // Verify the current password
-        if (!Hash::check($request->current_password, $user->password)) {
-            return response()->json([
-                'errors' => ['current_password' => ['The current password is incorrect.']],
-            ], 422);
-        }
-
-        // Update the name if provided
-        if ($request->has('name')) {
-            $user->name = $request->name;
-        }
-
-        // Update the password if a new password is provided
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        // Save the updated user
-        $user->save();
-
-        // Return a response indicating success
         return response()->json([
-            'message' => 'Profile updated successfully!',
-            'user' => $user,
+            'message' => 'Name updated successfully.',
+            'user' => $request->user(),
         ]);
     }
 }
