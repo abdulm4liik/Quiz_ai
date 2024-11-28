@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       user.value = data
     } catch (error) {
-      if (error.response.status === 409) {
+      if (error.response.status == 409) {
         router.push({ name: 'verify-email' })
       }
     }
@@ -35,7 +35,7 @@ export const useAuthStore = defineStore('auth', () => {
       await fetchUser()
       router.push({ name: 'Activity' })
     } catch (error) {
-      if (error.response.status === 422) {
+      if (error.response.status == 422) {
         errors.value = error.response.data.errors
       }
     } finally {
@@ -74,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       status.value = data.status
     } catch (error) {
-      if (error.response.status === 422) {
+      if (error.response.status == 422) {
         errors.value = error.response.data.errors
       }
     } finally {
@@ -97,7 +97,7 @@ export const useAuthStore = defineStore('auth', () => {
         query: { reset: btoa(response.data?.status) },
       })
     } catch (error) {
-      if (error.response.status === 422) {
+      if (error.response.status == 422) {
         errors.value = error.response.data.errors
       }
     } finally {

@@ -14,11 +14,11 @@ const axios = Axios.create({
 axios.interceptors.request.use((config) => {
   const token = document.cookie
     .split('; ')
-    .find((row) => row.startsWith('XSRF-TOKEN='))  // Extract CSRF token from cookies
+    .find((row) => row.startsWith('XSRF-TOKEN='))  
     ?.split('=')[1];
 
   if (token) {
-    config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);  // Add CSRF token to request headers
+    config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);  
   }
 
   return config;
@@ -30,7 +30,7 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('Axios Error:', error.response || error.message);  // Log errors for debugging
+    console.error('Axios Error:', error.response || error.message); 
     return Promise.reject(error);
   }
 );

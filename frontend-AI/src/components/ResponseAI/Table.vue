@@ -24,7 +24,7 @@
           </td>
           <td class="text-left py-5 p-4">
             <p class="text-sm text-navy font-semibold">
-              {{ response.response_type === 1 ? 'Quiz' : 'Summary' }}
+              {{ response.response_type == 1 ? 'Quiz' : 'Summary' }}
             </p>
           </td>
           <td class="p-4 py-5">
