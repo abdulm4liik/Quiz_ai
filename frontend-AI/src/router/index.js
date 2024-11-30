@@ -7,9 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      meta: { title: 'Home', middleware: [] },
-      component: Home,
+      redirect: '/Quiz',
     },
     {
       path: '/login',
@@ -67,8 +65,6 @@ router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title + ' :: ' + import.meta.env.VITE_APP_NAME;
 
   const auth = useAuthStore();
-
-  // Fetch the user on each route change to ensure authentication state is correct
   if (!auth.isLoggedIn) {
     await auth.fetchUser();
   }

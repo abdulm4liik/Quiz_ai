@@ -15,7 +15,6 @@ export const useAIResponsesStore = defineStore('aiResponses', {
   }),
 
   actions: {
-    // Fetch AI responses with search and pagination support
     async fetchAIResponses(page = 1, search = '') {
       try {
         const response = await axios.get('/api/ai-responses', {
@@ -24,8 +23,6 @@ export const useAIResponsesStore = defineStore('aiResponses', {
             search,
           },
         });
-
-        // Set the AI responses and update pagination
         this.aiResponses = response.data.data;
         this.pagination = response.data.meta || {
           current_page: 1,
@@ -39,20 +36,17 @@ export const useAIResponsesStore = defineStore('aiResponses', {
       }
     },
 
-    // Search AI responses with debounce to avoid excessive API calls
     searchAIResponses(searchTerm) {
       if (this.searchTimeout) {
         clearTimeout(this.searchTimeout);
       }
 
       this.searchTimeout = setTimeout(() => {
-        // Reset pagination when a new search starts
         this.pagination.current_page = 1;
         this.fetchAIResponses(1, searchTerm);
       }, 300);
     },
 
-    // Delete an AI response and update the local list
     async deleteAIResponse(id) {
       try {
         await axios.delete(`/api/ai-responses/${id}`);
@@ -60,6 +54,29 @@ export const useAIResponsesStore = defineStore('aiResponses', {
       } catch (error) {
         console.error('Error deleting AI response:', error);
       }
-    }
+    },
+    async uploadPDF(formData) {
+      this.loading = true;
+      this.errorMessage = '';
+      this.response = null;
+    
+      try {
+        const response = await axios.post('/api/ai-responses/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('Upload Successful:', JSON.stringify(response.data, null, 2));
+        this.response = response.data;
+        this.loading = false;
+        return response.data; 
+      } catch (error) {
+        this.errorMessage = error.response ? error.response.data : error.message;
+        this.loading = false;
+      }
+    },
+    
+   
   },
+  
 });

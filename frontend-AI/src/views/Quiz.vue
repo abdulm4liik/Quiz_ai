@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import FileUpload from '@/components/Auth/Upload.vue';
+
 </script>
 
 <template>

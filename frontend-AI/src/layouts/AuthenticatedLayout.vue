@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import ApplicationLogo from '@/components/ApplicationLogo.vue'
 import Dropdown from '@/components/Dropdown.vue'
@@ -40,10 +40,61 @@ const goToProfile = () => {
 const closeProfileModal = () => {
   isProfileModalOpen.value = false;
 };
+
+
+const showDemo = ref(false);
+
+
+const openDemo = () => {
+  showDemo.value = true;
+};
+
+const closeDemo = () => {
+  showDemo.value = false;
+  localStorage.setItem('isModalShown', 'true');
+};
+
+
+
+onMounted(() => {
+  const isModalShown = localStorage.getItem('isModalShown');
+  if (!isModalShown) {
+    openDemo(); 
+  }
+});
+
+const handleLogin = () => {
+  if (!user) {
+    goToLogin();  
+  }
+};
 </script>
 
 <template>
+  
   <div>
+    <Modal   :show="showDemo">
+      <div class="p-6">
+          <h2 class="text-xl font-semibold text-gray-800">Quiz-AI Beta Version</h2>
+          <p class="text-gray-600 mt-2">
+            Welcome to Quiz-AI! This application is currently in its beta stage and not yet fully completed. 
+          </p>
+          <p class="text-gray-600 mt-2">
+            It is built to enhance development skills and demonstrates the use of the GPT API for AI-powered quiz generation.
+          </p>
+          <p class="text-sm text-gray-400 mt-2">
+            Please note: Since this is a beta version, some features may be missing or incomplete.
+          </p>
+        <button
+          @click="closeDemo"
+          class="mt-4 px-4 py-2 bg-navy text-white rounded-lg hover:bg-navy-sky transition"
+        >
+          Close
+        </button>
+      </div>
+    </Modal>
+
+
     <Modal :show="isLoginModalOpen" @close="closeLoginModal">
   
         <login/>
@@ -66,7 +117,7 @@ const closeProfileModal = () => {
 
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink :to="{ name: 'Activity' }" :active="route.name == 'Activity'">
+                <NavLink @click="handleLogin" :to="{ name: 'Activity' }" :active="route.name == 'Activity'">
                   My-Activity
                 </NavLink>
                 <NavLink :to="{ name: 'Summary' }" :active="route.name == 'Summary'">
@@ -78,9 +129,7 @@ const closeProfileModal = () => {
               </div>
             </div>
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-              <!-- Check if the user is logged in -->
               <template v-if="user?.name">
-                <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
                   <Dropdown align="right" width="48">
                     <template #trigger>

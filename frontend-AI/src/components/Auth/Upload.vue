@@ -40,10 +40,10 @@
       <p v-if="pageError" class="text-sm text-red-500 mt-2">{{ pageError }}</p>
       <p class="text-sm text-navy mt-2">Total Pages: {{ pageCount }}</p>
       <button 
-        @click="downloadSelectedPages" 
+        @click="sendSelectedPages"
         class="mt-4 bg-navy text-white p-2 rounded-lg"
       >
-        Download Selected Pages
+        Send Selected Pages
       </button>
     </div>
 
@@ -55,6 +55,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useAIResponsesStore } from '@/stores/AIResponse';  
 import { PDFDocument } from 'pdf-lib';
 
 const errorMessage = ref("");
@@ -62,7 +63,8 @@ const pageRange = ref("");
 const pageCount = ref(0);
 const pageError = ref("");
 const selectedPages = ref([]);
-const fileName = ref(""); // To store the name of the uploaded PDF file
+const fileName = ref("");
+const aiResponsesStore = useAIResponsesStore();
 
 const handleFileChange = async (event) => {
   const file = event.target.files[0];
@@ -79,7 +81,7 @@ const handleFileChange = async (event) => {
     const arrayBuffer = await file.arrayBuffer();
     const pdfDoc = await PDFDocument.load(arrayBuffer);
     pageCount.value = pdfDoc.getPages().length;
-    fileName.value = file.name; // Store the name of the uploaded file
+    fileName.value = file.name;
   } catch (err) {
     errorMessage.value = "Failed to load PDF file.";
     event.target.value = "";
@@ -123,7 +125,7 @@ const validatePageRange = () => {
   return true;
 };
 
-const downloadSelectedPages = async () => {
+const sendSelectedPages = async () => {
   if (!validatePageRange()) {
     return;
   }
@@ -133,16 +135,24 @@ const downloadSelectedPages = async () => {
   const pdfDoc = await PDFDocument.load(arrayBuffer);
   const newPdfDoc = await PDFDocument.create();
 
+  // Extract the selected pages from the uploaded PDF
   for (const pageIndex of selectedPages.value) {
     const [page] = await newPdfDoc.copyPages(pdfDoc, [pageIndex - 1]);
     newPdfDoc.addPage(page);
   }
 
   const pdfBytes = await newPdfDoc.save();
+
+  const formData = new FormData();
   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'selected_pages.pdf';
-  link.click();
+  formData.append('pdf', blob, file.name);
+
+  try {
+    const response = await aiResponsesStore.uploadPDF(formData); 
+    console.log('PDF sent successfully:', response);
+  } catch (error) {
+    console.error('Error sending PDF:', error);
+  }
 };
+
 </script>

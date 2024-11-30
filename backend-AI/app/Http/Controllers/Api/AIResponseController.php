@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-
+use Illuminate\Support\Facades\Log;
 use App\Models\ai_response; 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -36,18 +36,21 @@ class AIResponseController extends Controller
     
 
 
-
     public function store(Request $request)
     {
         // Validate the file upload
-        $request->validate([
-            'pdf' => 'required|file|mimes:pdf|max:102400', // Max size 100MB
-        ]);
+        try {
+            $request->validate([
+                'pdf' => 'required|file|mimes:pdf',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'details' => $e->errors()], 422);
+        }
     
-        // Get the uploaded PDF file
+        // Get the uploaded file
         $file = $request->file('pdf');
-    
-        // Send the request to the Python Flask server
+        
+        // Send the file to Flask API
         $client = new Client();
         try {
             $response = $client->post('http://127.0.0.1:5000/generate-response', [
@@ -59,46 +62,41 @@ class AIResponseController extends Controller
                     ],
                     [
                         'name' => 'response_type',
-                        'contents' => '0', // Or '0' based on what you want
+                        'contents' => '0',
                     ],
                 ],
             ]);
             
-    
-            // Decode the JSON response from the Flask API
-            $quizData = json_decode($response->getBody()->getContents(), true);
-    
-            // Extract the quiz questions from the response
-            $questions = $quizData['questions'] ?? [];
-    
-            // Here, we'll assume that the topic can be inferred from the PDF or the AI's response.
-            // If the AI sends back a topic, you can use it, otherwise fallback to 'Unknown' or another default.
-            $topic = $quizData['topic'] ?? 'Unknown'; // Change this based on how your Python API works
-    
-            // Store the AI response in the database
-            $aiResponse = ai_response::create([
-                'user_id' => auth()->id(),  // Assuming you're using authentication
-                'title' => $file->getClientOriginalName(),
-                'response_type' => 0, // You can set the type accordingly
-                'response_data' => json_encode($quizData),  // Store the full AI response
-                'marks' => count($questions), // Example: You can assign marks based on number of questions
+            // Log the Flask API response
+            Log::info('Flask API Response:', [
+                'status' => $response->getStatusCode(),
+                'body' => $response->getBody()->getContents(),
             ]);
     
-            // Optionally, store the topic as well
-            // You can adjust the logic if you want to store the topic separately
+            // Decode the response
+            $responseData = json_decode($response->getBody()->getContents(), true);
     
-            // Return the quiz data to the frontend
+            if (isset($responseData['error'])) {
+                Log::error('Flask API Error:', $responseData);
+                return response()->json(['error' => 'Flask API Error: ' . $responseData['error']], 500);
+            }
+    
+            // Process the quiz data
+            $quiz = $responseData['questions'] ?? [];
+    
+            // Return the quiz data without the topic
             return response()->json([
-                'quiz' => $questions,
-                'topic' => $topic,
+                'quiz' => $quiz,
             ]);
     
         } catch (\Exception $e) {
-            // Handle errors
+            Log::error('Error in Flask API Request:', ['message' => $e->getMessage()]);
             return response()->json(['error' => 'Failed to generate quiz: ' . $e->getMessage()], 500);
         }
     }
-
+    
+    
+    
 
     public function destroy(ai_response $response)
     {

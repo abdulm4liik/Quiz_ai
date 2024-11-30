@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify
-import openai
 import pdfplumber
-from quiz_generator import generate_quiz
-from summarizer import summarize_text
+import openai
+from dotenv import load_dotenv
+import os
+from quiz_generator import generate_quiz 
 
-openai.api_key = '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' 
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the OpenAI API key from the environment variables
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
 ALLOWED_EXTENSIONS = {'pdf'}
 app = Flask(__name__)
 
@@ -32,7 +38,6 @@ def generate_response():
         file = request.files['file']
         response_type = int(request.form.get('response_type'))
 
-        # Check if file is a valid PDF
         if not allowed_file(file.filename):
             return jsonify({'error': 'Invalid file type. Only PDF files are allowed.'}), 400
 
@@ -43,14 +48,12 @@ def generate_response():
             return jsonify({'error': 'No text extracted from the PDF.'}), 400
 
         if response_type == 1:
-            # Generate quiz questions
             quiz_data = generate_quiz(text_content)
             return jsonify(quiz_data)
 
         elif response_type == 0:
-            # Summarize content
-            summary_data = summarize_text(text_content)
-            return jsonify(summary_data)
+            # Summarize content (if needed)
+            return jsonify({'summary': 'Summary generation logic here.'})
 
         else:
             return jsonify({'error': 'Invalid response_type. Use 0 for summarization and 1 for quiz generation.'}), 400
