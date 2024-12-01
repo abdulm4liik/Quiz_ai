@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('ai_responses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->string('title'); 
-            $table->tinyInteger('response_type'); 
-            $table->json('response_data'); 
-            $table->integer('marks')->nullable(); 
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->string('response_type');
+            $table->text('response_data'); 
+            $table->integer('marks')->nullable();
             $table->timestamps();
         });
     }

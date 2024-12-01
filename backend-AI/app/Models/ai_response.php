@@ -10,6 +10,8 @@ class ai_response extends Model
 {
 
 
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'title',
@@ -18,28 +20,12 @@ class ai_response extends Model
         'marks'
     ];
 
-    /**
-     * Set the response_data attribute, encoding it as JSON.
-     *
-     * @param mixed $value
-     * @return void
-     */
-    public function setResponseDataAttribute($value)
-    {
-        $this->attributes['response_data'] = json_encode($value, JSON_UNESCAPED_UNICODE);
-    }
 
-    /**
-     * Get the response_data attribute, decoding it from JSON.
-     *
-     * @param string $value
-     * @return mixed
-     */
-    public function getResponseDataAttribute($value)
-    {
-        return json_decode($value, true);
-    }
+    protected $casts = [
+        'response_data' => 'array',  
+    ];
 
+ 
  
     public function user()
     {

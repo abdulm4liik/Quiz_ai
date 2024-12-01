@@ -38,21 +38,15 @@ class AIResponseController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the file upload
-        try {
+      
             $request->validate([
                 'pdf' => 'required|file|mimes:pdf',
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => 'Validation failed', 'details' => $e->errors()], 422);
-        }
-    
-        // Get the uploaded file
         $file = $request->file('pdf');
-        
-        // Send the file to Flask API
+    
+
         $client = new Client();
-        try {
+       
             $response = $client->post('http://127.0.0.1:5000/generate-response', [
                 'multipart' => [
                     [
@@ -66,34 +60,18 @@ class AIResponseController extends Controller
                     ],
                 ],
             ]);
-            
-            // Log the Flask API response
-            Log::info('Flask API Response:', [
-                'status' => $response->getStatusCode(),
-                'body' => $response->getBody()->getContents(),
-            ]);
     
-            // Decode the response
-            $responseData = json_decode($response->getBody()->getContents(), true);
+            $responseBody = $response->getBody()->getContents();
+            $responseData = json_decode($responseBody, true);
+                return response()->json([
+                    'quiz' => $responseData,
+                ]);
+        
     
-            if (isset($responseData['error'])) {
-                Log::error('Flask API Error:', $responseData);
-                return response()->json(['error' => 'Flask API Error: ' . $responseData['error']], 500);
-            }
-    
-            // Process the quiz data
-            $quiz = $responseData['questions'] ?? [];
-    
-            // Return the quiz data without the topic
-            return response()->json([
-                'quiz' => $quiz,
-            ]);
-    
-        } catch (\Exception $e) {
-            Log::error('Error in Flask API Request:', ['message' => $e->getMessage()]);
-            return response()->json(['error' => 'Failed to generate quiz: ' . $e->getMessage()], 500);
-        }
+   
     }
+    
+    
     
     
     
