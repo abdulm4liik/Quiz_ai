@@ -23,6 +23,7 @@ class ai_response extends Model
 
     protected $casts = [
         'response_data' => 'array',  
+        'marks' => 'array',  
     ];
 
  

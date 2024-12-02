@@ -35,18 +35,19 @@ class AIResponseController extends Controller
     }
     
 
-
     public function store(Request $request)
     {
-      
-            $request->validate([
-                'pdf' => 'required|file|mimes:pdf',
-            ]);
-        $file = $request->file('pdf');
+        $request->validate([
+            'pdf' => 'required|file|mimes:pdf',
+            'response_type' => 'required|integer|in:0,1',
+        ]);
     
-
+        $file = $request->file('pdf');
+        $response_type = $request->input('response_type');  
+    
         $client = new Client();
-       
+    
+        try {
             $response = $client->post('http://127.0.0.1:5000/generate-response', [
                 'multipart' => [
                     [
@@ -56,20 +57,47 @@ class AIResponseController extends Controller
                     ],
                     [
                         'name' => 'response_type',
-                        'contents' => '0',
+                        'contents' => $response_type,  
                     ],
                 ],
             ]);
     
             $responseBody = $response->getBody()->getContents();
             $responseData = json_decode($responseBody, true);
-                return response()->json([
-                    'quiz' => $responseData,
-                ]);
-        
     
-   
+            if ($response_type == 1 && isset($responseData['quiz'])) {
+                $correctAnswers = array_column($responseData['quiz'], 'correct_answer');
+                $marks = [
+                    'correct_answers' => $correctAnswers,
+                    'your_answers' => [],
+                    'total' => null,
+                ];
+            } else {
+                $marks = [];
+            }
+    
+            $aiResponse = ai_response::create([
+                'user_id' => auth()->id(),
+                'title' => $file->getClientOriginalName(),
+                'response_type' => $response_type,
+                'response_data' => $responseData,
+                'marks' => $marks,
+            ]);
+    
+            return response()->json([
+                'message' => 'AI response successfully stored.',
+                'data' => $aiResponse,
+            ]);
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to process the AI response.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
     }
+    
+    
     
     
     

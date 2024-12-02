@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('response_type');
+            $table->tinyInteger('response_type');
             $table->text('response_data'); 
-            $table->integer('marks')->nullable();
+            $table->text('marks')->nullable();
             $table->timestamps();
         });
     }
