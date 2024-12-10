@@ -96,6 +96,65 @@ class AIResponseController extends Controller
             ], 500);
         }
     }
+
+    public function answer(Request $request)
+    {
+        // Receive the data from the frontend
+        $quizId = $request->input('quiz_id');
+        $answers = $request->input('answers');
+        $totalScore = $request->input('total_score');
+    
+        // Check if the necessary data is provided
+        if (!$quizId || !$answers || !isset($totalScore)) {
+            return response()->json(['message' => 'Missing data: quiz_id, answers, or total_score'], 400);
+        }
+    
+        // Find the AI response by quiz_id
+        $response = ai_response::find($quizId);
+    
+        if (!$response) {
+            return response()->json(['message' => 'AI response not found'], 404);
+        }
+    
+        // Assuming we receive correct answers from frontend as well
+        // The correct answers would typically be stored in a different field or table
+        $correctAnswers = $request->input('correct_answers'); // Add correct_answers to the request
+    
+        // If correct_answers are missing from the request, return an error
+        if (!$correctAnswers) {
+            return response()->json(['message' => 'Correct answers are missing'], 400);
+        }
+    
+        // Prepare the marks data to save
+        $marksData = [
+            'correct_answers' => $correctAnswers,
+            'your_answers' => $answers,
+            'total' => $totalScore
+        ];
+    
+        // Update the response object with the marks data
+        $response->marks = $marksData;
+    
+        // Save the response object
+        try {
+            $response->save();
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to update AI response'], 500);
+        }
+    
+        // Return success response with the updated data
+        return response()->json([
+            'message' => 'Quiz answers successfully stored.',
+            'data' => $response
+        ]);
+    }
+    
+    
+    
+    
+    
+    
+    
     
     
     

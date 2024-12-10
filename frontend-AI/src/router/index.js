@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -8,24 +7,6 @@ const router = createRouter({
     {
       path: '/',
       redirect: '/Quiz',
-    },
-    {
-      path: '/login',
-      name: 'login',
-      meta: { title: 'Login', middleware: ['guest'] },
-      component: () => import('@/views/auth/Login.vue'),
-    },
-    {
-      path: '/register',
-      name: 'register',
-      meta: { title: 'Register', middleware: ['guest'] },
-      component: () => import('@/views/auth/Register.vue'),
-    },
-    {
-      path: '/forgot-password',
-      name: 'forgot-password',
-      meta: { title: 'Forgot Password', middleware: ['guest'] },
-      component: () => import('@/views/auth/ForgotPassword.vue'),
     },
     {
       path: '/Quiz',
@@ -46,16 +27,10 @@ const router = createRouter({
       component: () => import('@/views/Activity.vue'),
     },
     {
-      path: '/verify-email',
-      name: 'verify-email',
-      meta: { title: 'Email Verify', middleware: ['auth'] },
-      component: () => import('@/views/auth/VerifyEmail.vue'),
-    },
-    {
-      path: '/password-reset/:token',
-      name: 'password-reset',
-      meta: { title: 'Password Reset', middleware: ['auth'] },
-      component: () => import('@/views/auth/PasswordReset.vue'),
+      path: '/Response',
+      name: 'Response',
+      meta: { title: 'Response', middleware: ['auth'] },
+      component: () => import('@/views/Response.vue'),
     },
 
   ],

@@ -1,5 +1,10 @@
 <template>
   <div class="w-full">
+    <div v-if="aiResponsesStore.loading" class="absolute inset-0 flex justify-center items-center  text-navy-soft bg-opacity-50 z-50  bg-white">
+    <div   class="animate-spin">
+      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity="0.25"/><circle cx="12" cy="2.5" r="1.5" fill="currentColor"></circle></svg>
+    </div>
+  </div>
     <label for="fileUpload"
       class="bg-white text-navy font-semibold text-xl rounded-lg w-full h-64 flex flex-col items-center justify-center cursor-pointer border-2 border-beige-dark border-dashed mx-auto font-sans">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-16 mb-4 fill-navy" viewBox="0 0 32 32">
@@ -51,12 +56,25 @@
       * You can upload only one PDF file. 
     </p>
   </div>
+
+  
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,defineProps } from 'vue';
 import { useAIResponsesStore } from '@/stores/AIResponse';  
 import { PDFDocument } from 'pdf-lib';
+import { useRouter } from 'vue-router';
+
+
+const emit = defineEmits();
+
+const props = defineProps({
+  responseType: {
+    type: Number,
+    required: true,
+  },
+});
 
 const errorMessage = ref("");
 const pageRange = ref("");
@@ -65,6 +83,7 @@ const pageError = ref("");
 const selectedPages = ref([]);
 const fileName = ref("");
 const aiResponsesStore = useAIResponsesStore();
+const router = useRouter();
 
 const handleFileChange = async (event) => {
   const file = event.target.files[0];
@@ -135,7 +154,7 @@ const sendSelectedPages = async () => {
   const pdfDoc = await PDFDocument.load(arrayBuffer);
   const newPdfDoc = await PDFDocument.create();
 
-  // Extract the selected pages from the uploaded PDF
+
   for (const pageIndex of selectedPages.value) {
     const [page] = await newPdfDoc.copyPages(pdfDoc, [pageIndex - 1]);
     newPdfDoc.addPage(page);
@@ -146,10 +165,20 @@ const sendSelectedPages = async () => {
   const formData = new FormData();
   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
   formData.append('pdf', blob, file.name);
+  formData.append('response_type', props.responseType);
 
   try {
     const response = await aiResponsesStore.uploadPDF(formData); 
     console.log('PDF sent successfully:', response);
+
+
+    emit('file-upload-success', response);
+
+
+    document.getElementById('fileUpload').value = ''; 
+    pageCount.value = ''; 
+    pageRange.value = ''; 
+    fileName.value = ''; 
   } catch (error) {
     console.error('Error sending PDF:', error);
   }

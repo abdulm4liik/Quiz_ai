@@ -15,6 +15,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/ai-responses', [AIResponseController::class, 'store']);
     Route::get('/ai-responses', [AIResponseController::class, 'index']);
     Route::delete('/ai-responses/{response}', [AIResponseController::class, 'destroy']);
+    Route::put('/ai-responses', [AIResponseController::class, 'answer']);
 
     Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
     Route::put('/profile/name', [ProfileController::class, 'updateName']);
