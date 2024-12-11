@@ -69,14 +69,14 @@ This Vue application contains a custom `auth` middleware, designed to abstract a
 ```js
 // views/ExamplePage.vue
 <script lang="ts" setup>
-import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
+import Layout from '@/layouts/Layout.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const { user, logout } = useAuthStore()
 </script>
 
 <template>
-  <AuthenticatedLayout>
+  <Layout>
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex gap-10">
         <p>{{ user?.name }}</p>
@@ -84,7 +84,7 @@ const { user, logout } = useAuthStore()
         <button @click="logout()">Sign out</button>
       </div>
     </div>
-  </AuthenticatedLayout>
+  </Layout>
 </template>
 
 <style scoped></style>

@@ -21,7 +21,7 @@ export const useProfileStore = defineStore('profile', {
       }
     },
     async updatePassword(currentPassword, newPassword, confirmPassword) {
-      if (newPassword !== confirmPassword) {
+      if (newPassword != confirmPassword) {
         this.errors = { password_confirmation: 'Passwords do not match.' };
         return;
       }

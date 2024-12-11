@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
+import Layout from '@/layouts/Layout.vue';
 import FileUpload from '@/components/Auth/Upload.vue';
 import { ref } from 'vue';
 
@@ -24,7 +24,7 @@ const close = () => {
 </script>
 
 <template>
-  <AuthenticatedLayout>
+  <Layout>
     <Modal :show="show" @close="close">
       <div class="p-6">
         <h3 class="text-xl font-semibold text-navy pb-2">Summary</h3>
@@ -61,7 +61,7 @@ const close = () => {
         </div>
       </div>
     </div>
-  </AuthenticatedLayout>
+  </Layout>
 </template>
 
 <style scoped>

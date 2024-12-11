@@ -22,7 +22,6 @@ class ai_resource extends JsonResource
             'response_data' => $this->response_data, 
             'marks' => $this->marks,
             'created_at' => $this->created_at,
-          
         ];
     }
 }

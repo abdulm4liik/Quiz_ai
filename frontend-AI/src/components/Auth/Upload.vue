@@ -90,7 +90,7 @@ const handleFileChange = async (event) => {
   errorMessage.value = "";
   pageError.value = "";
 
-  if (!file || file.type !== 'application/pdf') {
+  if (!file || file.type != 'application/pdf') {
     errorMessage.value = "Invalid file type selected. Please upload a PDF file.";
     event.target.value = "";
     return;
@@ -111,7 +111,7 @@ const validatePageRange = () => {
   const pages = pageRange.value.split('-').map(Number);
   selectedPages.value = [];
 
-  if (pages.length === 1) {
+  if (pages.length == 1) {
     const page = pages[0];
     if (isNaN(page) || page < 1 || page > pageCount.value) {
       pageError.value = `Please enter a valid page number between 1 and ${pageCount.value}.`;
@@ -121,7 +121,7 @@ const validatePageRange = () => {
     return true;
   }
 
-  if (pages.length !== 2 || isNaN(pages[0]) || isNaN(pages[1])) {
+  if (pages.length != 2 || isNaN(pages[0]) || isNaN(pages[1])) {
     pageError.value = "Please enter a valid page range (e.g., 2-7).";
     return false;
   }

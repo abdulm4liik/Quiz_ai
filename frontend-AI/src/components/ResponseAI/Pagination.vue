@@ -1,7 +1,6 @@
 <template>
-    <div class="flex justify-between items-center px-4 py-3">
-      <div />
-      <div class="flex space-x-1">
+    <div class=" items-center px-4 py-3">
+    
         <button 
           class="px-3 py-1 min-w-9 min-h-9 text-sm font-bold text-navy-soft border-2 border-navy-soft bg-white rounded"
           :disabled="currentPage == 1"
@@ -12,8 +11,8 @@
         <button 
           v-for="page in lastPage" 
           :key="page" 
-          :class="{'bg-navy-soft text-white': page == currentPage, 'text-beige-dark': page !== currentPage}"
-          class="px-3 py-1 min-w-9 min-h-9 text-sm font-bold text-navy-soft border-2 border-navy-soft rounded"
+          :class="{'bg-navy-soft text-white': page == currentPage, 'text-beige-dark': page != currentPage}"
+          class="px-3 py-1 min-w-9 min-h-9 text-sm font-bold text-navy-soft border-2 border-navy-soft rounded m-0.5"
           @click="$emit('fetch', page)"
         >
           {{ page }}
@@ -26,7 +25,7 @@
           Next
         </button>
       </div>
-    </div>
+    
   </template>
   
   <script setup>

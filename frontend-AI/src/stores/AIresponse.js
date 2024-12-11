@@ -49,16 +49,16 @@ export const useAIResponsesStore = defineStore('aiResponses', {
     async deleteAIResponse(id) {
       try {
         await axios.delete(`/api/ai-responses/${id}`);
-        this.aiResponses = this.aiResponses.filter((response) => response.id !== id);
+        this.aiResponses = this.aiResponses.filter((response) => response.id != id);
       } catch (error) {
         console.error('Error deleting AI response:', error);
       }
     },
 
     async uploadPDF(formData) {
-      this.loading = true;  // Set loading to true when the upload starts
-      this.errorMessage = ''; // Reset any previous error message
-      this.response = null;    // Reset response data
+      this.loading = true;  
+      this.errorMessage = ''; 
+      this.response = null;   
 
       try {
         const response = await axios.post('/api/ai-responses/', formData, {
@@ -68,34 +68,20 @@ export const useAIResponsesStore = defineStore('aiResponses', {
         });
         console.log('Upload Successful:', JSON.stringify(response.data, null, 2));
         this.response = response.data;
-        this.loading = false;  // Set loading to false after upload completes
+        this.loading = false;  
         return response.data;
       } catch (error) {
         this.errorMessage = error.response ? error.response.data : error.message;
-        this.loading = false;  // Set loading to false if an error occurs
+        this.loading = false; 
       }
     },
-    async storeAnswers(quiz, answers, quizId) {
-      this.errorMessage = ''; // Reset any previous error message
-
-      // Prepare the data to send
-      const data = {
-        quiz_id: quizId,
-        answers: answers,
-        total_score: answers.filter((answer, index) => answer == quiz[index].correct_answer).length,
-        correct_answers: quiz.map(question => question.correct_answer), // Sending the correct answers as well
-      };
-
+    async storeAnswers(payload) {
       try {
-        // Send the data to the backend
-        const response = await axios.put('/api/ai-responses/', data);
-        console.log('Quiz answers stored:', response.data);
-        this.loading = false;  // Set loading to false after storing the answers
-        return response.data;
+        const response = await axios.put('/api/ai-responses/', payload); 
+        return response.data; 
       } catch (error) {
-        this.errorMessage = error.response ? error.response.data : error.message;
-        this.loading = false;  // Set loading to false if an error occurs
-        console.error('Error storing quiz answers:', this.errorMessage);
+        console.error("Error while storing answers:", error);
+        throw error;
       }
     },
   },

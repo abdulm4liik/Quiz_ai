@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
+import Layout from '@/layouts/Layout.vue';
 import FileUpload from '@/components/Auth/Upload.vue';
 import { ref, computed, nextTick } from 'vue';
 import { useAIResponsesStore } from '@/stores/AIresponse';
@@ -7,24 +7,25 @@ import { useAIResponsesStore } from '@/stores/AIresponse';
 const storeAnswers = useAIResponsesStore();
 
 const responseType = 1;
-const quiz = ref([]); // To store quiz data
-const show = ref(false); // Whether the quiz modal is visible
-const answers = ref([]);  // Array to store answers
-const score = ref(0);  // To store the score
-const quizCompleted = ref(false);  // Track if quiz is completed
-const quizId = ref(null);  // To store the quiz ID
+const quiz = ref([]); 
+const show = ref(false); 
+const answers = ref([]); 
+const score = ref(0);  
+const quizCompleted = ref(false);  
+const quizId = ref(null); 
 
-// Handle the response from the file upload
+
 const handleFileUploadResponse = (data) => {
   if (data?.data?.response_data?.quiz) {
     quiz.value = data.data.response_data.quiz;
-    quizId.value = data.data.response_data.quiz.id;  // Extract the quiz ID
-    answers.value = new Array(quiz.value.length).fill(null);  // Initialize answers array
-    show.value = true;  // Show quiz modal when file is uploaded
+    quizId.value = data.data.id; 
+    answers.value = new Array(quiz.value.length).fill(null);  
+    show.value = true; 
     console.log("Quiz loaded, showing modal:", show.value);
-    console.log("Quiz ID:", quizId.value);  // Debugging the quiz ID
+    console.log("Quiz ID:", quizId.value);
   }
 };
+
 
 const close = () => {
   show.value = false; 
@@ -32,47 +33,57 @@ const close = () => {
   answers.value = new Array(quiz.value.length).fill(null);  
   score.value = 0;  
   quiz.value = [];  
-  quizId.value = null;  // Reset quiz ID
+  quizId.value = null; 
 };
 
-// Submit the quiz and calculate score
+
 const submitQuiz = async () => {
-  // Calculate score
   score.value = quiz.value.reduce((acc, question, index) => {
-    if (answers.value[index] === question.correct_answer) {
+    if (answers.value[index] == question.correct_answer) {
       return acc + 1;
     }
     return acc;
   }, 0);
 
-  console.log("Score calculated:", score.value);  // Debugging the score calculation
-
-  quizCompleted.value = true;  // Mark quiz as completed
-  await nextTick();  // Ensure Vue updates the view after score calculation
-  console.log("Quiz completed:", quizCompleted.value);  
+  console.log("Score calculated:", score.value);
 
 
-  if (quizId.value !== null) {
+  const marks = {
+    correct_answers: quiz.value.map(question => question.correct_answer),
+    your_answers: answers.value,
+    total: score.value,
+  };
+
+  console.log("Marks Object:", marks);
+
+  quizCompleted.value = true;  
+  await nextTick();  
+
+  const payload = {
+    quiz_id: quizId.value,
+    marks,
+  };
+
+  if (quizId.value != null) {
     try {
-      const response = await storeAnswers.storeAnswers(quiz.value, answers.value, quizId.value);  // Use quizId here
-      console.log('Quiz results stored:', response);
+      const response = await storeAnswers.storeAnswers(payload);
+      console.log("Quiz results stored:", response);
     } catch (error) {
-      console.error('Error storing quiz results:', error);
+      console.error("Error storing quiz results:", error);
     }
   } else {
-    console.error('Quiz ID is not available');
+    console.error("Quiz ID is not available");
   }
 };
 
-
 const isQuizComplete = computed(() => {
-  return answers.value.every(answer => answer !== null);
+  return answers.value.every(answer => answer != null);
 });
 </script>
 
+
 <template>
-  <AuthenticatedLayout>
-    <!-- Modal Section -->
+  <Layout>
     <Modal :show="show">
       <div class="p-6">
         <h3 class="text-xl font-semibold text-navy pb-2">Quiz</h3>
@@ -139,7 +150,7 @@ const isQuizComplete = computed(() => {
         </div>
       </div>
     </div>
-  </AuthenticatedLayout>
+  </Layout>
 </template>
 
 <style scoped>

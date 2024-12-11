@@ -104,7 +104,6 @@ const handleLogin = () => {
     <Modal :show="isProfileModalOpen" @close="closeProfileModal">
   
       <Profile/>
-  
 
   </Modal>
     <div class="min-h-screen bg-beige-dark ">
@@ -218,7 +217,13 @@ const handleLogin = () => {
         >
           <div class="pt-2 pb-3 space-y-1">
             <ResponsiveNavLink :to="{ name: 'Quiz' }" :active="route.name == 'Quiz'">
-              Quiz
+              AI-Quiz
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :to="{ name: 'Summary' }" :active="route.name == 'Summary'">
+              AI-Summary
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :to="{ name: 'Activity' }" :active="route.name == 'Activity'">
+             My-Activity
             </ResponsiveNavLink>
           </div>
 
@@ -234,6 +239,7 @@ const handleLogin = () => {
             </div>
 
             <div class="mt-3 space-y-1">
+              <ResponsiveNavButton @click="goToProfile()"> Profile </ResponsiveNavButton>
               <ResponsiveNavButton @click="logout()"> Log Out </ResponsiveNavButton>
             </div>
           </div>
