@@ -66,7 +66,6 @@ export const useAIResponsesStore = defineStore('aiResponses', {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('Upload Successful:', JSON.stringify(response.data, null, 2));
         this.response = response.data;
         this.loading = false;  
         return response.data;

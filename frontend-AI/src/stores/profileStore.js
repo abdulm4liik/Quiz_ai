@@ -32,7 +32,6 @@ export const useProfileStore = defineStore('profile', {
           password: newPassword,
           password_confirmation: confirmPassword,
         });
-        console.log('Password updated successfully:', response.data);
         this.errors = null;
         location.reload();
       } catch (error) {

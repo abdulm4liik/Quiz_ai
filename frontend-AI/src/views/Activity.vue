@@ -177,7 +177,6 @@ const userSelectedAnswer = (questionIndex) => {
                 </div>
               </div>
               </Modal>
-              <div>{{responseData}}</div>
             </Layout>
 </template>
 

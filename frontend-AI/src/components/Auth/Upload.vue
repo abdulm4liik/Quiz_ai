@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-full" v-if="user?.name">
     <div v-if="aiResponsesStore.loading" class="absolute inset-0 flex justify-center items-center  text-navy-soft bg-opacity-50 z-50  bg-white">
     <div   class="animate-spin">
       <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity="0.25"/><circle cx="12" cy="2.5" r="1.5" fill="currentColor"></circle></svg>
@@ -57,6 +57,11 @@
     </p>
   </div>
 
+  <div v-else>
+    <p class="lg:text-3xl  text-navy-sky mt-4">
+      * You must log in first.
+  </p>
+</div>
   
 </template>
 
@@ -64,8 +69,9 @@
 import { ref,defineProps } from 'vue';
 import { useAIResponsesStore } from '@/stores/AIResponse';  
 import { PDFDocument } from 'pdf-lib';
-import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth'
 
+const { user } = useAuthStore()
 
 const emit = defineEmits();
 
@@ -83,7 +89,6 @@ const pageError = ref("");
 const selectedPages = ref([]);
 const fileName = ref("");
 const aiResponsesStore = useAIResponsesStore();
-const router = useRouter();
 
 const handleFileChange = async (event) => {
   const file = event.target.files[0];
@@ -169,9 +174,7 @@ const sendSelectedPages = async () => {
 
   try {
     const response = await aiResponsesStore.uploadPDF(formData); 
-    console.log('PDF sent successfully:', response);
-
-
+  
     emit('file-upload-success', response);
 
 

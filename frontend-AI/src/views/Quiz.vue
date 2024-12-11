@@ -21,8 +21,6 @@ const handleFileUploadResponse = (data) => {
     quizId.value = data.data.id; 
     answers.value = new Array(quiz.value.length).fill(null);  
     show.value = true; 
-    console.log("Quiz loaded, showing modal:", show.value);
-    console.log("Quiz ID:", quizId.value);
   }
 };
 
@@ -45,7 +43,6 @@ const submitQuiz = async () => {
     return acc;
   }, 0);
 
-  console.log("Score calculated:", score.value);
 
 
   const marks = {
@@ -54,7 +51,6 @@ const submitQuiz = async () => {
     total: score.value,
   };
 
-  console.log("Marks Object:", marks);
 
   quizCompleted.value = true;  
   await nextTick();  
@@ -67,7 +63,6 @@ const submitQuiz = async () => {
   if (quizId.value != null) {
     try {
       const response = await storeAnswers.storeAnswers(payload);
-      console.log("Quiz results stored:", response);
     } catch (error) {
       console.error("Error storing quiz results:", error);
     }
