@@ -110,18 +110,6 @@ class AIResponseController extends Controller
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     public function destroy(ai_response $response)
     {

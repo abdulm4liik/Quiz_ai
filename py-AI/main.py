@@ -112,7 +112,6 @@ def generate_summary(text_content):
         if not summary:
             return {'error': 'Generated summary is empty from OpenAI API.'}
 
-        # Return only the summary as the key part of the response
         return {'summary': summary}
 
     except Exception as e:
