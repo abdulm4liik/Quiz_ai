@@ -26,12 +26,7 @@ const router = createRouter({
       meta: { title: 'Activity', middleware: ['auth'] },
       component: () => import('@/views/Activity.vue'),
     },
-    {
-      path: '/Response',
-      name: 'Response',
-      meta: { title: 'Response', middleware: ['auth'] },
-      component: () => import('@/views/Response.vue'),
-    },
+ 
 
   ],
 })
