@@ -72,6 +72,7 @@ class AIResponseController extends Controller
                 $marks = [];
             }
     
+            
             $aiResponse = ai_response::create([
                 'user_id' => auth()->id(),
                 'title' => $file->getClientOriginalName(),
