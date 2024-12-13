@@ -63,8 +63,8 @@
   
   <script setup>
   import { ref, computed, watch } from 'vue';
-  import { useProfileStore } from '@/stores/profileStore';
-  import { useAuthStore } from '@/stores/auth'
+  import { useProfileStore } from '../../stores/profileStore';
+  import { useAuthStore } from '../../stores/auth'
 
   
   const profileStore = useProfileStore();

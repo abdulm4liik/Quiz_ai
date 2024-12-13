@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useAIResponsesStore } from '@/stores/AIresponse';
-import AIResponseTable from '@/components/ResponseAI/Table.vue';
-import Pagination from '@/components/ResponseAI/Pagination.vue';
-import Layout from '@/layouts/Layout.vue';
+import { useAIResponsesStore } from '../stores/AIresponse';
+import AIResponseTable from '../components/ResponseAI/Table.vue';
+import Pagination from '../components/ResponseAI/Pagination.vue';
+import Layout from '../layouts/Layout.vue';
 
 const aiResponsesStore = useAIResponsesStore();
 

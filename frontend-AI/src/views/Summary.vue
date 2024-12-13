@@ -1,6 +1,6 @@
 <script setup>
-import Layout from '@/layouts/Layout.vue';
-import FileUpload from '@/components/Auth/Upload.vue';
+import Layout from '../layouts/Layout.vue';
+import FileUpload from '../components/Auth/Upload.vue';
 import { ref } from 'vue';
 
 const responseType = 0; 

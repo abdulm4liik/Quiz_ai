@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,19 +12,19 @@ const router = createRouter({
       path: '/Quiz',
       name: 'Quiz',
       meta: { title: 'Quiz', middleware: [] },
-      component: () => import('@/views/Quiz.vue'),
+      component: () => import('../views/Quiz.vue'),
     },
     {
       path: '/Summary',
       name: 'Summary',
       meta: { title: 'Summary', middleware: [] },
-      component: () => import('@/views/Summary.vue'),
+      component: () => import('../views/Summary.vue'),
     },
     {
       path: '/Activity',
       name: 'Activity',
       meta: { title: 'Activity', middleware: ['auth'] },
-      component: () => import('@/views/Activity.vue'),
+      component: () => import('../views/Activity.vue'),
     },
  
 

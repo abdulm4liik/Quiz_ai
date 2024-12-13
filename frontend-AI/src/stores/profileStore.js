@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import axios from '@/utils/axios'; 
-import { useAuthStore } from '@/stores/auth'
+import axios from '../utils/axios'; 
+import { useAuthStore } from '../stores/auth'
 
 export const useProfileStore = defineStore('profile', {
   state: () => ({

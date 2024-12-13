@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import Checkbox from '@/components/Checkbox.vue'
+import { useAuthStore } from '../../stores/auth'
+import Checkbox from '../Checkbox.vue'
 
 const form = ref({
   email: '',

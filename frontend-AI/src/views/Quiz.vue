@@ -1,8 +1,8 @@
 <script setup>
-import Layout from '@/layouts/Layout.vue';
-import FileUpload from '@/components/Auth/Upload.vue';
+import Layout from '../layouts/Layout.vue';
+import FileUpload from '../components/Auth/Upload.vue';
 import { ref, computed, nextTick } from 'vue';
-import { useAIResponsesStore } from '@/stores/AIresponse';
+import { useAIResponsesStore } from '../stores/AIresponse';
 
 const storeAnswers = useAIResponsesStore();
 

@@ -67,9 +67,9 @@
 
 <script setup>
 import { ref,defineProps } from 'vue';
-import { useAIResponsesStore } from '@/stores/AIresponse';  
+import { useAIResponsesStore } from '../../stores/AIresponse';  
 import { PDFDocument } from 'pdf-lib';
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '../../stores/auth'
 
 const { user } = useAuthStore()
 

@@ -1,15 +1,15 @@
 <script setup>
 import { ref,onMounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import ApplicationLogo from '@/components/ApplicationLogo.vue'
-import Dropdown from '@/components/Dropdown.vue'
-import DropdownButton from '@/components/DropdownButton.vue'
-import NavLink from '@/components/NavLink.vue'
-import ResponsiveNavLink from '@/components/ResponsiveNavLink.vue'
-import ResponsiveNavButton from '@/components/ResponsiveNavButton.vue'
-import { useAuthStore } from '@/stores/auth'
-import Login from '@/components/Auth/Login.vue';
-import Profile from '@/components/Auth/Profile.vue';
+
+import Dropdown from '../components/Dropdown.vue'
+import DropdownButton from '../components/DropdownButton.vue'
+import NavLink from '../components/NavLink.vue'
+import ResponsiveNavLink from '../components/ResponsiveNavLink.vue'
+import ResponsiveNavButton from '../components/ResponsiveNavButton.vue'
+import { useAuthStore } from '../stores/auth'
+import Login from '../components/Auth/Login.vue';
+import Profile from '../components/Auth/Profile.vue';
 
 const route = useRoute()
 
