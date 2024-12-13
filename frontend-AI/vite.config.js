@@ -7,12 +7,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'vue': 'vue/dist/vue.esm-bundler.js', // Add this alias
     },
   },
-  base: '/subdirectory/', // Keep this if your app is deployed in a subdirectory
   server: {
     port: 3000,
   },
 });
-

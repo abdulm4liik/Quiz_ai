@@ -238,9 +238,12 @@ const handleLogin = () => {
               </div>
             </div>
 
-            <div class="mt-3 space-y-1">
+            <div class="mt-3 space-y-1" v-if="user?.name">
               <ResponsiveNavButton @click="goToProfile()"> Profile </ResponsiveNavButton>
               <ResponsiveNavButton @click="logout()"> Log Out </ResponsiveNavButton>
+            </div>
+            <div class="mt-3 space-y-1" v-else>
+              <ResponsiveNavButton @click="goToLogin()"> Log-In </ResponsiveNavButton>
             </div>
           </div>
         </div>
