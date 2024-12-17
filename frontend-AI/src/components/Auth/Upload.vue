@@ -33,14 +33,14 @@
 
     <div v-if="pageCount > 0" class="mt-4">
       <label for="pageSelection" class="text-sm font-medium text-navy">
-        Select pages (up to 5 pages). E.g., 2-7 or 5 for a single page: <span>({{ fileName }})</span>
+        Select pages (up to 5 pages). E.g., 2-6 or 5 for a single page: <span>({{ fileName }})</span>
       </label>
       <input
         v-model="pageRange"
         type="text"
         id="pageSelection"
         class="mt-2 px-3 py-2 border-2 rounded-md w-full"
-        placeholder="Enter page range (e.g., 2-7)"
+        placeholder="Enter page range (e.g., 2-6)"
       />
       <p v-if="pageError" class="text-sm text-red-500 mt-2">{{ pageError }}</p>
       <p class="text-sm text-navy mt-2">Total Pages: {{ pageCount }}</p>
@@ -127,7 +127,7 @@ const validatePageRange = () => {
   }
 
   if (pages.length != 2 || isNaN(pages[0]) || isNaN(pages[1])) {
-    pageError.value = "Please enter a valid page range (e.g., 2-7).";
+    pageError.value = "Please enter a valid page range (e.g., 2-6).";
     return false;
   }
 
